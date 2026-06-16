@@ -1,110 +1,73 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-    <div class="mx-auto max-w-6xl px-4 py-8">
-      <header class="mb-6">
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900">
-          Student Directory
-        </h1>
-        <p class="mt-1 text-sm text-gray-600">
-          Total students: <span class="font-semibold text-gray-900">{{ students.length }}</span>
+  <div class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div
+      v-if="cardShow"
+      class="w-80 bg-white border shadow-md rounded-lg overflow-hidden"
+    >
+      <img
+        :src="student.image"
+        :alt="student.name"
+        class="w-full h-48 object-cover"
+      />
+
+      <div class="p-4">
+        <h3 class="text-xl font-bold">{{ student.name }}</h3>
+
+        <p class="mt-2">
+          Age: <strong>{{ student.age }}</strong>
         </p>
-      </header>
 
-      <StudentList
-        :students="filteredStudents"
-        :searchQuery="searchQuery"
-        @update:searchQuery="searchQuery = $event"
-        :favorites="favorites"
-        @toggle-favorite="toggleFavorite"
-        @view-detail="showDetail"
-        @delete-student="deleteStudent"
-      />
+        <p>
+          Major: <strong>{{ student.major }}</strong>
+        </p>
 
-      <StudentDetail
-        v-if="selectedStudent"
-        :student="selectedStudent"
-        @close="closeDetail"
-      />
+        <div class="flex gap-2 mt-4">
+          <button
+            @click="showDetail = !showDetail"
+            class="flex-1 bg-orange-500 py-2 rounded-lg text-white cursor-pointer hover:bg-orange-600"
+          >
+            {{ showDetail ? "Hide Details" : "View Details" }}
+          </button>
+
+          <button
+            @click="deleteStudent"
+            class="flex-1 bg-red-500 py-2 rounded-lg text-white cursor-pointer hover:bg-red-600"
+          >
+            Delete
+          </button>
+        </div>
+
+        <div v-if="showDetail" class="mt-4 pt-4 border-t">
+          <p><strong>Email:</strong> {{ student.email }}</p>
+          <p><strong>Phone:</strong> {{ student.phone }}</p>
+          <p><strong>Address:</strong> {{ student.address }}</p>
+        </div>
+      </div>
     </div>
+
+    <p v-else class="text-xl text-red-500 font-semibold">
+      Student card has been deleted.
+    </p>
   </div>
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
-import StudentList from "./components/StudentList.vue";
-import StudentDetail from "./components/StudentDetail.vue";
+import { ref } from "vue"
 
-const students = ref([
-  {
-    id: 1,
-    name: "chavy yom",
-    age: 15,
-    major: "English Trainer",
-    image: "https://i.pravatar.cc/150?img=1",
-  },
-  {
-    id: 2,
-    name: "rida yom",
-    age: 18,
-    major: "English Trainer",
-    image: "https://i.pravatar.cc/150?img=2",
-  },
-  {
-    id: 3,
-    name: "pilip yom",
-    age: 20,
-    major: "Web Developer",
-    image: "https://i.pravatar.cc/150?img=3",
-  },
-  {
-    id: 4,
-    name: "sara yom",
-    age: 12,
-    major: "Khmer Trainer",
-    image: "https://i.pravatar.cc/150?img=4",
-  },
-]);
+const cardShow = ref(true)
+const showDetail = ref(false)
 
-const searchQuery = ref("");
+const student = {
+  name: "Pilip Yom",
+  major: "Information Technology",
+  age: 22,
+  email: "pilip@example.com",
+  phone: "+855 12 345 678",
+  address: "Phnom Penh, Cambodia",
+  image: "https://i.pravatar.cc/300?img=5"
+}
 
-const favorites = ref([]); // array of student ids
-
-const filteredStudents = computed(() => {
-  const q = searchQuery.value.trim().toLowerCase();
-  if (!q) return students.value;
-
-  return students.value.filter((s) => {
-    return (
-      s.name.toLowerCase().includes(q) ||
-      s.major.toLowerCase().includes(q)
-    );
-  });
-});
-
-const selectedStudent = ref(null);
-
-const showDetail = (student) => {
-  selectedStudent.value = student;
-};
-
-const closeDetail = () => {
-  selectedStudent.value = null;
-};
-
-const toggleFavorite = (studentId) => {
-  const idx = favorites.value.indexOf(studentId);
-  if (idx >= 0) favorites.value.splice(idx, 1);
-  else favorites.value.push(studentId);
-};
-
-const deleteStudent = (id) => {
-  students.value = students.value.filter((student) => student.id !== id);
-
-  favorites.value = favorites.value.filter((studentId) => studentId !== id);
-
-  if (selectedStudent.value?.id === id) {
-    selectedStudent.value = null;
-  }
-};
+const deleteStudent = () => {
+  showCard.value = false
+}
 </script>
-
