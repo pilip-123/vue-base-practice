@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="h-full rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-  >
-    <slot></slot>
+  <div class="border border-gray-300 rounded-[10px] p-4 m-2.5 shadow-md">
+<slot></slot>
   </div>
 </template>
-
