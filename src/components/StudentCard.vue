@@ -25,7 +25,7 @@ const emit = defineEmits([
 const viewDetail =() =>{
   emit("view-detail", props.student);
 }
-const deleteStudent = () =>{
+const deleteStudent = (id) =>{
   // Fallback because your student objects currently don't have `id`
   const key = props.student.id ?? props.student.name
   emit("delete-student", key)
